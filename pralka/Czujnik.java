@@ -15,10 +15,15 @@ public class Czujnik {
         return true;
     }
 
-    //DO NAPISANIA
-    public double zwiekszStan(double zmiana) {return stan;}
-
     //ustawienie do odpowiedniego poziomu stanu czujnika, np. temperatury
     public void ustawStan(double poziom) {
+        double tempo = 0.1;
+        while (Math.abs(poziom-stan)>0.01) {
+            double roznica = poziom-stan;
+            double zmiana = roznica*tempo;
+            stan += zmiana;
+            System.out.println("Stan: " + stan);
+        }
+        zuzycie++;
     }
 }
