@@ -15,17 +15,9 @@ public class Pralka {
     Czujnik zabezpieczenieDrzwi = new Czujnik();
     Czujnik przeplywomierz = new Czujnik();
 
-    /* KOMPONENTY
-    * grzałka do wody
-    * filtr wody
-    * */
+    //zarządzanie wodą - elektrozawory, pompa, grzałka, filtr
+    UkladWodny ukladWodny = new UkladWodny();
 
-    /* ELEMENTY WYKONAWCZE
-    * pompa do wody
-    * elektrozawory wodne
-    * silnik inweterowy - do sterowania prędkością
-    * sterownik regulujący prędkość obrotową
-    * */
 
     //Programy wbudowane
     Program wbudowany1 = new Program("Bawełna", "standardowy program z wyższą temperaturą i prędkością wirowania.", 60.0, false, 15, 60, 1200, false);

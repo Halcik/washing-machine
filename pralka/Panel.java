@@ -24,13 +24,11 @@ public class Panel {
         return Program.programy.get(id);
     }
 
-    //ekranik do wyświetlania czasu - DO NAPISANIA
+    //ekranik do wyświetlania czasu
     public void screenTime(int czas) {
-
-    }
-
-    //zatrzymanie prania - DO NAPISANIA
-    public boolean buttonStop() {
-        return false;
+        while (czas>0) {
+            System.out.println("Pozostały czas: ");
+            czas-=1;
+        }
     }
 }
