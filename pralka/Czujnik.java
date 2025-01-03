@@ -3,6 +3,7 @@ package pralka;
 public class Czujnik {
     double stan = 0; //stan w sensie temperatury, poziomu wody, itd
     int zuzycie = 0; //zużycie czujnika
+    double tempo = 0.1;
 
     //pomiar stanu czujnika
     public double pomiar() {
@@ -17,12 +18,14 @@ public class Czujnik {
 
     //ustawienie do odpowiedniego poziomu stanu czujnika, np. temperatury
     public void ustawStan(double poziom) {
-        double tempo = 0.1;
-        while (Math.abs(poziom-stan)>0.01) {
+        while (Math.abs(poziom-stan)>(tempo/10)) {
             double roznica = poziom-stan;
             double zmiana = roznica*tempo;
             stan += zmiana;
             System.out.println("Stan: " + stan);
+            try {
+            Thread.sleep(200);
+            } catch (InterruptedException e) {}
         }
         zuzycie++;
     }

@@ -15,6 +15,8 @@ public class Pralka {
     Czujnik zabezpieczenieDrzwi = new Czujnik();
     Czujnik przeplywomierz = new Czujnik();
 
+    Silnik silnik = new Silnik();
+
     //zarządzanie wodą - elektrozawory, pompa, grzałka, filtr
     UkladWodny ukladWodny = new UkladWodny();
 

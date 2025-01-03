@@ -29,6 +29,9 @@ public class Panel {
         while (czas>0) {
             System.out.println("Pozostały czas: ");
             czas-=1;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {}
         }
     }
 }
