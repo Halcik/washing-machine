@@ -20,4 +20,16 @@ public class Beben extends Pojemnik {
         return plyn;
     }
 
+    public void wirowanie(Silnik silnik, int predkosc) {
+        System.out.println("Rozpoczynam wirowanie");
+        for (int i = 0; i < 5; i++) {
+            silnik.ustawPredkosc(predkosc);
+            silnik.zatrzymaj();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {}
+        }
+
+    }
+
 }

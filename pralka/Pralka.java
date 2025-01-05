@@ -64,11 +64,11 @@ public class Pralka {
     private void pranie(Program program) {
         if (zabezpieczenieDrzwi.pomiar()==1) {
             zabezpieczenieDrzwi.ustawStan(2);
-            ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, 5, program.temperaturaWody);
-            proszekDoPrania.wyjmij(5);
-            // uruchomienie prania wstępnego, jeśli jest
-            // uruchomienie prania zasadniczego
-            // płukanie, jeśli jest
+            ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
+            proszekDoPrania.uzyj();
+            if (program.czasPraniaWstepnego>0) pranieWstepne();
+            pranieZasadnicze();
+            if (program.dodatkowePlukanie) ukladWodny.plukanie(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
             // wirowanie - odwirowuje wodę z ubrań
             // opróżnienie wody
             // odblokowanie drzwiczek
@@ -76,9 +76,12 @@ public class Pralka {
             // - poziom wody
             // - temperaturę wody
             // - prędkość obrotową bębna
-        }
-
+        } else System.out.println("Drzwiczki są otwarte");
     }
+    //Wykonanie prania wstępnego - DO NAPISANIA
+    private void pranieWstepne() {}
+    //Wykonanie prania zasadniczego - DO NAPISANIA
+    private void pranieZasadnicze() {}
 
     //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji
     public void widokPanelu(Panel panel) {}

@@ -7,7 +7,7 @@ public class UkladWodny {
     Elektrozawor zaworWe = new Elektrozawor();
     Elektrozawor zaworWy = new Elektrozawor();
 
-    public void przygotujWode(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, int ileWody, double temperatura) {
+    public void przygotujWode(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura) {
         System.out.println("Rozpoczęcie przygotowywania wody");
         zaworWe.otworz();
         filtr.filtruj();
@@ -25,6 +25,17 @@ public class UkladWodny {
         System.out.println("Woda odprowadzona.");
     }
 
+    //DO UZUPEŁNIENIA
+    public void plukanie(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura) {
+        odprowadzWode(poziomWody, przeplywomierz);
+        przygotujWode(poziomWody, przeplywomierz, temperaturaWody, ileWody, temperatura);
+        for (int i=0; i<4; i++) {
+            System.out.println("Trwa płukanie...");
+            //wirowanie bębna?
+            filtr.filtruj();
+        }
+    }
+
     public boolean sprawdzZuzycie() {
         boolean sprawnosc = true;
         if (pompa.sprawdzZuzycie()!=true) sprawnosc = false;
@@ -38,7 +49,7 @@ public class UkladWodny {
 
     //Klasy wewnętrzne dotyczące układu wodnego
     private class Pompa extends Czujnik {
-        public void pompowanie(Czujnik poziomWody, Czujnik przeplywomierz, int ileWody) {
+        public void pompowanie(Czujnik poziomWody, Czujnik przeplywomierz, double ileWody) {
             System.out.println("Pompowanie wody...");
             if (poziomWody.pomiar()!=ileWody) {
                 przeplywomierz.ustawStan(1);
