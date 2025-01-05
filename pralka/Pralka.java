@@ -4,7 +4,7 @@ public class Pralka {
     //Pojemniki
     Pojemnik plynPlukanie = new Pojemnik(10, 50);
     Pojemnik proszekDoPrania = new Pojemnik(5, 10);
-    Pojemnik beben = new Pojemnik(2, 5);
+    Beben beben = new Beben(2, 5);
 
     Panel panel = new Panel();
 
@@ -41,7 +41,7 @@ public class Pralka {
         else System.out.println("Pralka jest włączona");
     }
 
-    //wyłączenie pralki - DO UZUPEŁNIENIA?
+    //wyłączenie pralki - DO UZUPEŁNIENIA lub usunięcia?
     public void wylacz() {
         if (panel.stan) panel.buttonWlacznik();
         else System.out.println("Pralka jest wyłączona");
@@ -83,13 +83,4 @@ public class Pralka {
     //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji
     public void widokPanelu(Panel panel) {}
 
-    // DO NAPISANIA - niekoniecznie tu
-    private void pompowanie_wody() {}
-    private void podgrzewanie_wody() {}
-    private void wywazanieBebna(){
-        //równomierne rozłożenie ubrań w bębnie
-        // czujnik do tego jest
-        // jak jest nie tak, to obraca bęben powoli, by rozłożyć
-    }
-    private void droznoscFiltra() {}
 }

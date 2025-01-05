@@ -10,11 +10,6 @@ public class Pojemnik {
         this.pojemnoscMax = pojemnoscMax;
     }
 
-    //pobranie info o zapełnieniu pralki, czyli wyważenie, ile jest
-    public double wywazenie() {
-        return zapelnienie;
-    }
-
     //napełnienie pojemnika
     public void napelnij(double waga) {
         zapelnienie += waga;
@@ -25,6 +20,17 @@ public class Pojemnik {
         zapelnienie -= waga;
     }
 
+    //użycie zawartości pojemnika podczas prania
+    public void uzyj() {
+        try {
+            if (zapelnienie<0) throw new IllegalAccessException("Brak płynu");
+            System.out.println("Napełnianie płynem...");
+            zapelnienie = 0;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     //sprawdzenie zapełnienia pojemnika - czy git, czy nie
     public boolean sprawdz() {
         if (zapelnienie > pojemnoscMax || zapelnienie < pojemnoscMin) {
@@ -32,6 +38,5 @@ public class Pojemnik {
         }
         return true;
     }
-
 
 }

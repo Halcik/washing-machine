@@ -68,12 +68,16 @@ public class UkladWodny {
         private boolean otwarty = false;
 
         public void otworz() {
-            otwarty = true;
-            zuzycie++;
+            if (otwarty==false) {
+                otwarty = true;
+                zuzycie++;
+            }
         }
 
         public void zamknij() {
-            otwarty = false;
+            if (otwarty) {
+                otwarty = false;
+            }
         }
     }
 }
