@@ -25,9 +25,19 @@ public class UkladWodny {
         System.out.println("Woda odprowadzona.");
     }
 
+    public boolean sprawdzZuzycie() {
+        boolean sprawnosc = true;
+        if (pompa.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (grzalka.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (filtr.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (zaworWe.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (zaworWy.sprawdzZuzycie()!=true) sprawnosc = false;
+        return sprawnosc;
+    }
+
 
     //Klasy wewnętrzne dotyczące układu wodnego
-    private class Pompa {
+    private class Pompa extends Czujnik {
         public void pompowanie(Czujnik poziomWody, Czujnik przeplywomierz, int ileWody) {
             System.out.println("Pompowanie wody...");
             if (poziomWody.pomiar()!=ileWody) {
@@ -35,27 +45,31 @@ public class UkladWodny {
                 poziomWody.ustawStan(ileWody);
                 przeplywomierz.ustawStan(0);
             }
+            zuzycie++;
         }
     }
 
-    private class Grzalka {
+    private class Grzalka extends Czujnik {
         public void podgrzej(double temperatura, Czujnik temperaturaWody) {
             System.out.println("Podgrzewanie wody...");
             temperaturaWody.ustawStan(temperatura);
+            zuzycie++;
         }
     }
 
-    private class Filtr {
+    private class Filtr extends Czujnik {
         public void filtruj() {
             System.out.println("Filtrowanie wody...");
+            zuzycie++;
         }
     }
 
-    private class Elektrozawor {
+    private class Elektrozawor extends Czujnik {
         private boolean otwarty = false;
 
         public void otworz() {
             otwarty = true;
+            zuzycie++;
         }
 
         public void zamknij() {

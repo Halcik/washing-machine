@@ -12,7 +12,7 @@ public class Pralka {
     Czujnik cisnienieWody = new Czujnik();
     Czujnik temperaturaWody = new Czujnik();
     Czujnik poziomWody = new Czujnik();
-    Czujnik zabezpieczenieDrzwi = new Czujnik();
+    Czujnik zabezpieczenieDrzwi = new Czujnik(); //0-otwarte, 1-zamknięte, 2-zablokowane
     Czujnik przeplywomierz = new Czujnik();
 
     Silnik silnik = new Silnik();
@@ -48,30 +48,36 @@ public class Pralka {
 
     }
 
-    //Sprawdzanie stanu pralki - DO NAPISANIA
+    //Sprawdzanie stanu pralki
     private boolean stanPralki() {
-        //sprawdzenie stanu pralki
-        //czy woda dostępna
-        //czy komponenty są sprawne - filtr, pompa
-        return true; //do zmiany w zależności od stanu
+        boolean sprawnosc = true;
+        if (cisnienieWody.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (temperaturaWody.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (zabezpieczenieDrzwi.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (przeplywomierz.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (silnik.sprawdzZuzycie()!=true) sprawnosc = false;
+        if (ukladWodny.sprawdzZuzycie()!=true) sprawnosc = false;
+        return sprawnosc;
     }
 
-    //proces prania - DO NAPISANIA
+    //proces prania - DO NAPISANIA - jakaś f-cja do określania, ile wody jest potrzebne + wyważanie bębna + ciuchy skąd
     private void pranie(Program program) {
-        // czy drzwiczki są zamknięte
-        // zablokowanie drzwiczek
-        // napełnienie bębna wodą
-        // dodanie detergentu
-        // uruchomienie prania wstępnego, jeśli jest
-        // uruchomienie prania zasadniczego
-        // płukanie, jeśli jest
-        // wirowanie - odwirowuje wodę z ubrań
-        // opróżnienie wody
-        // odblokowanie drzwiczek
-        // powinno sprawdzać w trakcie:
-        // - poziom wody
-        // - temperaturę wody
-        // - prędkość obrotową bębna
+        if (zabezpieczenieDrzwi.pomiar()==1) {
+            zabezpieczenieDrzwi.ustawStan(2);
+            ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, 5, program.temperaturaWody);
+            proszekDoPrania.wyjmij(5);
+            // uruchomienie prania wstępnego, jeśli jest
+            // uruchomienie prania zasadniczego
+            // płukanie, jeśli jest
+            // wirowanie - odwirowuje wodę z ubrań
+            // opróżnienie wody
+            // odblokowanie drzwiczek
+            // powinno sprawdzać w trakcie:
+            // - poziom wody
+            // - temperaturę wody
+            // - prędkość obrotową bębna
+        }
+
     }
 
     //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji
