@@ -3,8 +3,10 @@ package pralka;
 import java.util.Scanner;
 
 //interfejs dotykowy do sterowania dla usera
-public class Panel {
+public class Panel implements Runnable{
     boolean stan = false;
+    int czas = 0;
+
 
     //włączenie pralki przez interfejs
     public void buttonWlacznik() {
@@ -24,14 +26,22 @@ public class Panel {
         return Program.programy.get(id);
     }
 
+    public void run() {
+        screenTime();
+    }
+
     //ekranik do wyświetlania czasu
-    public void screenTime(int czas) {
+    private void screenTime() {
         while (czas>0) {
-            System.out.println("Pozostały czas: ");
-            czas-=1;
+            System.out.println("Pozostały czas: "+czas);
+            czas--;
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {}
         }
+    }
+
+    public void ustawCzas(int czas) {
+        this.czas = czas;
     }
 }

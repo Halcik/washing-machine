@@ -60,28 +60,46 @@ public class Pralka {
         return sprawnosc;
     }
 
-    //proces prania - DO NAPISANIA - jakaś f-cja do określania, ile wody jest potrzebne + wyważanie bębna + ciuchy skąd
+    //proces prania
     private void pranie(Program program) {
         if (zabezpieczenieDrzwi.pomiar()==1) {
             zabezpieczenieDrzwi.ustawStan(2);
             ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
             proszekDoPrania.uzyj();
-            if (program.czasPraniaWstepnego>0) pranieWstepne();
-            pranieZasadnicze();
-            if (program.dodatkowePlukanie) ukladWodny.plukanie(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
-            // wirowanie - odwirowuje wodę z ubrań
-            // opróżnienie wody
-            // odblokowanie drzwiczek
-            // powinno sprawdzać w trakcie:
-            // - poziom wody
-            // - temperaturę wody
-            // - prędkość obrotową bębna
+            panel.ustawCzas(program.czasPraniaWstepnego+program.czasPraniaZasadniczego);
+            Thread wyswietlaczCzasu = new Thread(new Panel());
+            wyswietlaczCzasu.start();
+            if (program.czasPraniaWstepnego>0) pranieWstepne(program);
+            pranieZasadnicze(program);
+            try {
+                wyswietlaczCzasu.join();
+            } catch (InterruptedException e) {}
+            if (program.dodatkowePlukanie) ukladWodny.plukanie(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody, plynPlukanie);
+            beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
+            ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
+            zabezpieczenieDrzwi.ustawStan(1);
         } else System.out.println("Drzwiczki są otwarte");
     }
     //Wykonanie prania wstępnego - DO NAPISANIA
-    private void pranieWstepne() {}
+    private void pranieWstepne(Program program) {
+        sprawdzParametry();
+
+
+    }
+
     //Wykonanie prania zasadniczego - DO NAPISANIA
-    private void pranieZasadnicze() {}
+    private void pranieZasadnicze(Program program) {
+
+    }
+
+    //Sprawdzenie utrzymania odpowiednich parametrów prania - DO NAPISANIA
+    private void sprawdzParametry() {
+        // powinno sprawdzać w trakcie:
+        // - poziom wody
+        // - temperaturę wody
+        // - prędkość obrotową bębna
+        // czekanie sekundę pomiędzy
+    }
 
     //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji
     public void widokPanelu(Panel panel) {}

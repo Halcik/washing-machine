@@ -16,17 +16,18 @@ public class Beben extends Pojemnik {
 
     //sprawdzenie, ile wody potrzeba do prania
     public double ileWody() {
-        double plyn = zapelnienie*8;
-        return plyn;
+        double woda = zapelnienie*8;
+        return woda;
     }
 
     public void wirowanie(Silnik silnik, int predkosc) {
         System.out.println("Rozpoczynam wirowanie");
         for (int i = 0; i < 5; i++) {
-            silnik.ustawPredkosc(predkosc);
-            silnik.zatrzymaj();
             try {
+                silnik.ustawPredkosc(predkosc);
                 Thread.sleep(200);
+                silnik.zatrzymaj();
+                Thread.sleep(100);
             } catch (InterruptedException e) {}
         }
 

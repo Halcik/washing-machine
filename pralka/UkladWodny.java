@@ -25,10 +25,11 @@ public class UkladWodny {
         System.out.println("Woda odprowadzona.");
     }
 
-    //DO UZUPEŁNIENIA
-    public void plukanie(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura) {
+    //proces płukania prania - DO UZUPEŁNIENIA
+    public void plukanie(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura, Pojemnik plynPlukanie) {
         odprowadzWode(poziomWody, przeplywomierz);
         przygotujWode(poziomWody, przeplywomierz, temperaturaWody, ileWody, temperatura);
+        plynPlukanie.uzyj();
         for (int i=0; i<4; i++) {
             System.out.println("Trwa płukanie...");
             //wirowanie bębna?
