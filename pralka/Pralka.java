@@ -80,25 +80,39 @@ public class Pralka {
             zabezpieczenieDrzwi.ustawStan(1);
         } else System.out.println("Drzwiczki są otwarte");
     }
-    //Wykonanie prania wstępnego - DO NAPISANIA
+
+    //Wykonanie prania wstępnego
     private void pranieWstepne(Program program) {
-        sprawdzParametry();
-
-
+        int czas = 0;
+        double temperatura = program.temperaturaWody/5*3;
+        int predkosc = program.predkoscObrotowaWirowania/2;
+        while (czas < program.czasPraniaWstepnego) {
+            sprawdzParametry(temperatura, predkosc);
+            beben.wirowanie(silnik, predkosc);
+            czas++;
+        }
     }
 
-    //Wykonanie prania zasadniczego - DO NAPISANIA
+    //Wykonanie prania zasadniczego
     private void pranieZasadnicze(Program program) {
+        int czas = 0;
+        while (czas < program.czasPraniaWstepnego) {
+            sprawdzParametry(program.temperaturaWody, program.predkoscObrotowaWirowania);
+            beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
+            czas++;
+        }
 
     }
 
-    //Sprawdzenie utrzymania odpowiednich parametrów prania - DO NAPISANIA
-    private void sprawdzParametry() {
-        // powinno sprawdzać w trakcie:
-        // - poziom wody
-        // - temperaturę wody
-        // - prędkość obrotową bębna
-        // czekanie sekundę pomiędzy
+    //Sprawdzenie utrzymania odpowiednich parametrów prania
+    private void sprawdzParametry(double temperatura, int predkosc) {
+        double woda = beben.ileWody();
+        if (woda!=poziomWody.pomiar()) poziomWody.ustawStan(woda);
+        if (temperaturaWody.pomiar()!=temperatura) temperaturaWody.ustawStan(temperatura);
+        if (silnik.pomiar()!=predkosc) silnik.ustawPredkosc(predkosc);
+        try {
+            Thread.sleep(500); //czas zajmuje też ustawianie ewentualne i wirowanie
+        } catch (InterruptedException e) {}
     }
 
     //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji

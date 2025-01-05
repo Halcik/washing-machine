@@ -24,7 +24,7 @@ public class Czujnik {
             stan += zmiana;
             System.out.println("Stan: " + stan);
             try {
-            Thread.sleep(200);
+            Thread.sleep(100);
             } catch (InterruptedException e) {}
         }
         zuzycie++;
