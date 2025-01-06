@@ -63,7 +63,7 @@ public class Pralka {
     //proces prania
     private void pranie(Program program) {
         if (zabezpieczenieDrzwi.pomiar()==1) {
-            zabezpieczenieDrzwi.ustawStan(2);
+            zabezpieczenieDrzwi.stan=2;
             if (beben.wywazenie(silnik)<=0 && beben.sprawdz()==false) return;
             ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
             proszekDoPrania.uzyj();
@@ -80,7 +80,7 @@ public class Pralka {
                 beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
             }
             ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
-            zabezpieczenieDrzwi.ustawStan(1);
+            zabezpieczenieDrzwi.stan=1;
         } else System.out.println("Drzwiczki są otwarte.. Zamknij je przed");
     }
 

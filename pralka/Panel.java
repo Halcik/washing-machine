@@ -26,6 +26,22 @@ public class Panel implements Runnable{
         return Program.programy.get(id);
     }
 
+    public void obslugaDrzwiczek(Czujnik zabezpieczenieDrzwi) {
+        switch ((int)zabezpieczenieDrzwi.stan) {
+            case 0:
+                System.out.println("Drzwi są zamykane..");
+                zabezpieczenieDrzwi.stan = 1;
+                break;
+            case 1:
+                System.out.println("Drzwi są otwierane");
+                zabezpieczenieDrzwi.stan = 0;
+                break;
+            case 2:
+                System.out.println("Drzwi są zablokowane. Nie można ich otworzyć");
+                break;
+        }
+    }
+
     public void run() {
         screenTime();
     }
