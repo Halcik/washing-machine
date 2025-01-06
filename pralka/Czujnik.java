@@ -12,7 +12,7 @@ public class Czujnik {
 
     //sprawdzenie zużycia czujnika - jest git do użycia lub nie
     public boolean sprawdzZuzycie() {
-        if (zuzycie>99) return false;
+        if (zuzycie>97) return false;
         return true;
     }
 

@@ -41,6 +41,7 @@ public class Panel implements Runnable{
         }
     }
 
+    //ustawienie czasu do pracy wątku z wyświetlaczem
     public void ustawCzas(int czas) {
         this.czas = czas;
     }

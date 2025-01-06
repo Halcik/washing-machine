@@ -8,6 +8,7 @@ public class UkladWodny {
     Elektrozawor zaworWy = new Elektrozawor();
 
     public void przygotujWode(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura) {
+        temperaturaWody.stan = 15;
         System.out.println("Rozpoczęcie przygotowywania wody");
         zaworWe.otworz();
         filtr.filtruj();
@@ -25,14 +26,14 @@ public class UkladWodny {
         System.out.println("Woda odprowadzona.");
     }
 
-    //proces płukania prania - DO UZUPEŁNIENIA
-    public void plukanie(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura, Pojemnik plynPlukanie) {
+    //proces płukania prania
+    public void plukanie(Beben beben, Silnik silnik, Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, Pojemnik plynPlukanie) {
         odprowadzWode(poziomWody, przeplywomierz);
-        przygotujWode(poziomWody, przeplywomierz, temperaturaWody, ileWody, temperatura);
+        przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), 15);
         plynPlukanie.uzyj();
         for (int i=0; i<4; i++) {
             System.out.println("Trwa płukanie...");
-            //wirowanie bębna?
+            beben.wirowanie(silnik, 500);
             filtr.filtruj();
         }
     }

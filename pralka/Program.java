@@ -55,7 +55,7 @@ public class Program {
         return new Program(nazwa, opis, tempWody, dodPlukanie==1, pranieWst, pranieZas, predkosc, usuwalnosc);
     }
 
-    //usunięcie programu własnego - NIEUŻYWANE
+    //usunięcie programu własnego
     public void usun() {
         if (this.usuwalnosc) Program.programy.remove(this);
         else System.out.println("Nie można usunąć programu wbudowanego");
@@ -68,7 +68,7 @@ public class Program {
         }
     }
 
-    //edycja programu - NIEUŻYWANE
+    //edycja programu
     public void edycja() {
         if (this.usuwalnosc) {
             System.out.println("Co chcesz zedytować?");

@@ -6,10 +6,11 @@ public class Beben extends Pojemnik {
         super(pojemnoscMin, pojemnoscMax); //konstruktor z klasy pojemnik
     }
 
-    //pobranie info o zapełnieniu pralki, czyli wyważenie, ile jest
-    public double wywazenie() {
+    //Rozkłada równomiernie ciuchy + info o zapełnieniu pralki
+    public double wywazenie(Silnik silnik) {
         if (zapelnienie>0) {
             System.out.println("Bęben powoli się obraca...");
+            wirowanie(silnik, 500);
         }
         return zapelnienie;
     }
@@ -22,14 +23,12 @@ public class Beben extends Pojemnik {
 
     public void wirowanie(Silnik silnik, int predkosc) {
         System.out.println("Rozpoczynam wirowanie");
-        for (int i = 0; i < 5; i++) {
-            try {
-                silnik.ustawPredkosc(predkosc);
-                Thread.sleep(200);
-                silnik.zatrzymaj();
-                Thread.sleep(100);
-            } catch (InterruptedException e) {}
-        }
+        try {
+            silnik.ustawPredkosc(predkosc);
+            Thread.sleep(200);
+            silnik.zatrzymaj();
+            Thread.sleep(100);
+        } catch (InterruptedException e) {}
 
     }
 

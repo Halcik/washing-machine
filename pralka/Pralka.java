@@ -64,6 +64,7 @@ public class Pralka {
     private void pranie(Program program) {
         if (zabezpieczenieDrzwi.pomiar()==1) {
             zabezpieczenieDrzwi.ustawStan(2);
+            if (beben.wywazenie(silnik)<=0 && beben.sprawdz()==false) return;
             ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
             proszekDoPrania.uzyj();
             panel.ustawCzas(program.czasPraniaWstepnego+program.czasPraniaZasadniczego);
@@ -74,11 +75,13 @@ public class Pralka {
             try {
                 wyswietlaczCzasu.join();
             } catch (InterruptedException e) {}
-            if (program.dodatkowePlukanie) ukladWodny.plukanie(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody, plynPlukanie);
-            beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
+            if (program.dodatkowePlukanie) ukladWodny.plukanie(beben, silnik, poziomWody, przeplywomierz, temperaturaWody, plynPlukanie);
+            for (int i = 0; i < 4; i++) {
+                beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
+            }
             ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
             zabezpieczenieDrzwi.ustawStan(1);
-        } else System.out.println("Drzwiczki są otwarte");
+        } else System.out.println("Drzwiczki są otwarte.. Zamknij je przed");
     }
 
     //Wykonanie prania wstępnego
@@ -111,7 +114,7 @@ public class Pralka {
         if (temperaturaWody.pomiar()!=temperatura) temperaturaWody.ustawStan(temperatura);
         if (silnik.pomiar()!=predkosc) silnik.ustawPredkosc(predkosc);
         try {
-            Thread.sleep(500); //czas zajmuje też ustawianie ewentualne i wirowanie
+            Thread.sleep(600); //czas zajmuje też ustawianie ewentualne i wirowanie
         } catch (InterruptedException e) {}
     }
 
