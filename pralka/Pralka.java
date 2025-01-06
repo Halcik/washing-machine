@@ -1,6 +1,10 @@
 package pralka;
 
+import java.util.Scanner;
+
 public class Pralka {
+    Scanner sc = new Scanner(System.in);
+
     //Pojemniki
     Pojemnik plynPlukanie = new Pojemnik(10, 50);
     Pojemnik proszekDoPrania = new Pojemnik(5, 10);
@@ -28,25 +32,38 @@ public class Pralka {
     Program wbudowany4 = new Program("Wełna", "krótki czas prania i niskie obroty.", 30.0, true, 5, 40, 600, false);
     Program wbudowany5 = new Program("Pranie szybkie", "rótkie, szybkie odświeżenie ubrań w niższej temperaturze.", 20.0, false, 0, 15, 1000, false);
 
-    //włączenie pralki - zmodyfikować - przed włączeniem - wybranie programu
-    public void wlacz() {
-        if (!panel.stan) {
-            panel.buttonWlacznik();
-            if (!stanPralki()) {
-                System.out.println("Pralka uszkodzona, trwa wyłączanie");
-                wylacz();
-                return;
+    //obsłużenie wybranej akcji przez usera w panelu
+    public void akcja() {
+        Program program = null;
+        int choice = 0;
+        while (choice!=6) {
+            choice = panel.widokPanelu(sc);
+            switch (choice) {
+                case 1:
+                    program = panel.buttonProgram(sc);
+                    break;
+                case 2: //do zmiany
+                    panel.buttonWlacznik();
+                    break;
+                case 3: //do zmiany
+                    plynPlukanie.napelnij(10);
+                    proszekDoPrania.napelnij(10);
+                    break;
+                case 4:
+                    panel.obslugaDrzwiczek(zabezpieczenieDrzwi);
+                    break;
+                case 5: //do zmiany
+                    beben.napelnij(5);
+                    break;
             }
         }
-        else System.out.println("Pralka jest włączona");
     }
 
-    //wyłączenie pralki - DO UZUPEŁNIENIA lub usunięcia?
-    public void wylacz() {
-        if (panel.stan) panel.buttonWlacznik();
-        else System.out.println("Pralka jest wyłączona");
-
+    //obecnie do zamykania Scannera
+    public void sprzatanie() {
+        sc.close();
     }
+
 
     //Sprawdzanie stanu pralki
     private boolean stanPralki() {
@@ -117,8 +134,5 @@ public class Pralka {
             Thread.sleep(600); //czas zajmuje też ustawianie ewentualne i wirowanie
         } catch (InterruptedException e) {}
     }
-
-    //DO NAPISANIA - widok tego, co jest w pralce i wybór akcji
-    public void widokPanelu(Panel panel) {}
 
 }

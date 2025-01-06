@@ -32,9 +32,9 @@ public class Program {
     }
 
     //dodanie nowego programu
-    public static Program nowy() {
+    public static Program nowy(Scanner sc) {
         System.out.println("Kreator nowego programu prania");
-        Scanner sc = new Scanner(System.in);
+        sc.nextLine();
         System.out.print("Nazwa: ");
         String nazwa = sc.nextLine();
         System.out.print("Opis: ");
@@ -49,9 +49,8 @@ public class Program {
         int pranieZas = sc.nextInt();
         System.out.print("Predkosc wirowania: ");
         int predkosc = sc.nextInt();
-        sc.close();
         boolean usuwalnosc = true;
-        System.out.println("Program "+nazwa+ "został dodany");
+        System.out.println("Program "+nazwa+ " został dodany");
         return new Program(nazwa, opis, tempWody, dodPlukanie==1, pranieWst, pranieZas, predkosc, usuwalnosc);
     }
 
@@ -69,15 +68,13 @@ public class Program {
     }
 
     //edycja programu
-    public void edycja() {
+    public void edycja(Scanner sc) {
         if (this.usuwalnosc) {
             System.out.println("Co chcesz zedytować?");
             System.out.println("[1] Nazwa\n[2] Opis\n[3] Temperatura wody\n[4] Dodatkowe płukanie\n[5] Czas prania wstępnego\n[6] Czas prania zasadniczego\n[7] Predkosc wirowania ");
-            Scanner sc = new Scanner(System.in);
             int edytuj = sc.nextInt();
             System.out.print("Wprowadź nową wartość: ");
             String zmiana = sc.nextLine();
-            sc.close();
             switch (edytuj) {
                 case 1:
                     nazwa = zmiana;

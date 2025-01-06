@@ -4,8 +4,22 @@ import java.util.Scanner;
 
 //interfejs dotykowy do sterowania dla usera
 public class Panel implements Runnable{
-    boolean stan = false;
+    boolean stan = false; //włącznik pralki
     int czas = 0;
+
+    //Widok tego, co jest w pralce i wybór akcji
+    public int widokPanelu(Scanner sc) {
+        System.out.println("\nStoisz przed pralką z różnymi guzikami do wyboru");
+        System.out.println("[1] Wybór programu");
+        System.out.println("[2] Włącznik pralki");
+        System.out.println("[3] Szufladka na detergenty");
+        System.out.println("[4] Drzwiczki");
+        System.out.println("[5] Dodanie ciuchów");
+        System.out.println("Co chcesz zrobić?");
+        int choice = sc.nextInt();
+        System.out.println();
+        return choice;
+    }
 
 
     //włączenie pralki przez interfejs
@@ -16,13 +30,11 @@ public class Panel implements Runnable{
     }
 
     //wybór programu istniejącego LUB tworzenie nowego
-    public Program buttonProgram() {
+    public Program buttonProgram(Scanner sc) {
         System.out.println("Wybierz program: ");
         Program.lista();
-        Scanner sc = new Scanner(System.in);
         int id = sc.nextInt();
-        sc.close();
-        if (id>Program.programy.size()-1) Program.nowy();
+        if (id>Program.programy.size()-1) Program.nowy(sc);
         return Program.programy.get(id);
     }
 
