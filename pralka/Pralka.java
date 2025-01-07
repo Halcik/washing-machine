@@ -13,11 +13,11 @@ public class Pralka {
     Panel panel = new Panel();
 
     //Czujniki
-    Czujnik cisnienieWody = new Czujnik();
-    Czujnik temperaturaWody = new Czujnik();
-    Czujnik poziomWody = new Czujnik();
-    Czujnik zabezpieczenieDrzwi = new Czujnik(); //0-otwarte, 1-zamknięte, 2-zablokowane
-    Czujnik przeplywomierz = new Czujnik();
+    Czujnik cisnienieWody = new Czujnik("Ciśnienie");
+    Czujnik temperaturaWody = new Czujnik("Temperatura");
+    Czujnik poziomWody = new Czujnik("Woda");
+    Czujnik zabezpieczenieDrzwi = new Czujnik("Drzwiczki"); //0-otwarte, 1-zamknięte, 2-zablokowane
+    Czujnik przeplywomierz = new Czujnik("Przepływomierz");
 
     Silnik silnik = new Silnik();
 

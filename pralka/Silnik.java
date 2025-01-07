@@ -6,6 +6,9 @@ public class Silnik extends Czujnik {
     //sprawdzZuzycie
     //pomiar - zwraca stan
     //ustawStan
+    public Silnik() {
+        super("Silnik");
+    }
 
     //wszelkie zmiany prędkości, funkcje sterownika
     public void ustawPredkosc(double predkosc) {

@@ -4,8 +4,8 @@ public class UkladWodny {
     Pompa pompa = new Pompa();
     Grzalka grzalka = new Grzalka();
     Filtr filtr = new Filtr();
-    Elektrozawor zaworWe = new Elektrozawor();
-    Elektrozawor zaworWy = new Elektrozawor();
+    Elektrozawor zaworWe = new Elektrozawor("wejścia");
+    Elektrozawor zaworWy = new Elektrozawor("wyjścia");
 
     public void przygotujWode(Czujnik poziomWody, Czujnik przeplywomierz, Czujnik temperaturaWody, double ileWody, double temperatura) {
         temperaturaWody.stan = 15;
@@ -51,6 +51,9 @@ public class UkladWodny {
 
     //Klasy wewnętrzne dotyczące układu wodnego
     private class Pompa extends Czujnik {
+        public Pompa() {
+            super("Pompa");
+        }
         public void pompowanie(Czujnik poziomWody, Czujnik przeplywomierz, double ileWody) {
             System.out.println("Pompowanie wody...");
             if (poziomWody.pomiar()!=ileWody) {
@@ -63,6 +66,9 @@ public class UkladWodny {
     }
 
     private class Grzalka extends Czujnik {
+        public Grzalka() {
+            super("Grzałka");
+        }
         public void podgrzej(double temperatura, Czujnik temperaturaWody) {
             System.out.println("Podgrzewanie wody...");
             temperaturaWody.ustawStan(temperatura);
@@ -71,6 +77,9 @@ public class UkladWodny {
     }
 
     private class Filtr extends Czujnik {
+        public Filtr() {
+            super("Filtr");
+        }
         public void filtruj() {
             System.out.println("Filtrowanie wody...");
             zuzycie++;
@@ -79,6 +88,9 @@ public class UkladWodny {
 
     private class Elektrozawor extends Czujnik {
         private boolean otwarty = false;
+        public Elektrozawor(String name) {
+            super("Elektrozawor "+name);
+        }
 
         public void otworz() {
             if (otwarty==false) {
