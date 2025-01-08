@@ -1,22 +1,30 @@
 package pralka;
 
+import java.util.Scanner;
+
 public class Pojemnik {
+    String nazwa;
     double pojemnoscMin; //pojemność pojemnika minimalna
     double pojemnoscMax; //pojemność maksymalna pojemnika
     double zapelnienie = 0; // ile już jest zapełnione
 
-    public Pojemnik(double pojemnoscMin, double pojemnoscMax) {
+    public Pojemnik(double pojemnoscMin, double pojemnoscMax, String nazwa) {
         this.pojemnoscMin = pojemnoscMin;
         this.pojemnoscMax = pojemnoscMax;
+        this.nazwa = nazwa;
     }
 
     //napełnienie pojemnika
-    public void napelnij(double waga) {
+    public void napelnij(Scanner sc) {
+        System.out.println("Napełnij "+nazwa+":");
+        double waga = sc.nextDouble();
         zapelnienie += waga;
     }
 
     //wyciąganie z pojemnika/wylewanie
-    public void wyjmij(double waga) {
+    public void wyjmij(Scanner sc) {
+        System.out.println("Wyjmij z"+nazwa+":");
+        double waga = sc.nextDouble();
         zapelnienie -= waga;
     }
 

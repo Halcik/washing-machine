@@ -3,7 +3,7 @@ package pralka;
 public class Beben extends Pojemnik {
 
     public Beben(double pojemnoscMin, double pojemnoscMax) {
-        super(pojemnoscMin, pojemnoscMax); //konstruktor z klasy pojemnik
+        super(pojemnoscMin, pojemnoscMax, "bęben"); //konstruktor z klasy pojemnik
     }
 
     //Rozkłada równomiernie ciuchy + info o zapełnieniu pralki

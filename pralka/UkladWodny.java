@@ -38,19 +38,9 @@ public class UkladWodny {
         }
     }
 
-    public boolean sprawdzZuzycie() {
-        boolean sprawnosc = true;
-        if (pompa.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (grzalka.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (filtr.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (zaworWe.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (zaworWy.sprawdzZuzycie()!=true) sprawnosc = false;
-        return sprawnosc;
-    }
-
 
     //Klasy wewnętrzne dotyczące układu wodnego
-    private class Pompa extends Czujnik {
+    protected class Pompa extends Czujnik {
         public Pompa() {
             super("Pompa");
         }
@@ -65,7 +55,7 @@ public class UkladWodny {
         }
     }
 
-    private class Grzalka extends Czujnik {
+    protected class Grzalka extends Czujnik {
         public Grzalka() {
             super("Grzałka");
         }
@@ -76,7 +66,7 @@ public class UkladWodny {
         }
     }
 
-    private class Filtr extends Czujnik {
+    protected class Filtr extends Czujnik {
         public Filtr() {
             super("Filtr");
         }
@@ -86,7 +76,7 @@ public class UkladWodny {
         }
     }
 
-    private class Elektrozawor extends Czujnik {
+    protected class Elektrozawor extends Czujnik {
         private boolean otwarty = false;
         public Elektrozawor(String name) {
             super("Elektrozawor "+name);

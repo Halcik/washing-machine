@@ -1,13 +1,19 @@
 package pralka;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Pralka {
     Scanner sc = new Scanner(System.in);
 
     //Pojemniki
-    Pojemnik plynPlukanie = new Pojemnik(10, 50);
-    Pojemnik proszekDoPrania = new Pojemnik(5, 10);
+    Pojemnik plynPlukanie = new Pojemnik(10, 50, "płyn do płukania");
+    Pojemnik proszekDoPrania = new Pojemnik(5, 10, "proszek do prania");
     Beben beben = new Beben(2, 5);
 
     Panel panel = new Panel();
@@ -32,6 +38,8 @@ public class Pralka {
     Program wbudowany4 = new Program("Wełna", "krótki czas prania i niskie obroty.", 30.0, true, 5, 40, 600, false);
     Program wbudowany5 = new Program("Pranie szybkie", "rótkie, szybkie odświeżenie ubrań w niższej temperaturze.", 20.0, false, 0, 15, 1000, false);
 
+    List<Czujnik> czujniki = Arrays.asList(cisnienieWody, temperaturaWody, poziomWody, zabezpieczenieDrzwi, przeplywomierz, silnik, ukladWodny.grzalka, ukladWodny.pompa, ukladWodny.filtr, ukladWodny.zaworWe, ukladWodny.zaworWy);
+
     //obsłużenie wybranej akcji przez usera w panelu
     public void akcja() {
         Program program = null;
@@ -46,14 +54,14 @@ public class Pralka {
                     panel.buttonWlacznik();
                     break;
                 case 3: //do zmiany
-                    plynPlukanie.napelnij(10);
-                    proszekDoPrania.napelnij(10);
+                    plynPlukanie.napelnij(sc);
+                    proszekDoPrania.napelnij(sc);
                     break;
                 case 4:
                     panel.obslugaDrzwiczek(zabezpieczenieDrzwi);
                     break;
                 case 5: //do zmiany
-                    beben.napelnij(5);
+                    beben.napelnij(sc);
                     break;
             }
         }
@@ -62,18 +70,43 @@ public class Pralka {
     //obecnie do zamykania Scannera
     public void sprzatanie() {
         sc.close();
+        raportPralki();
+        for (Czujnik cz : czujniki) {
+            cz.czujnikThread.interrupt();
+        }
+    }
+
+    private void raportPralki() {
+        FileWriter writer = null;
+        LocalDateTime data = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        try {
+            writer = new FileWriter("raport.txt");
+            writer.write("~~~Raport z "+ data.format(formatter) +"~~~\n");
+            for (Czujnik cz : czujniki) {
+                writer.write(cz.raportuj()+"\n");
+            }
+        } catch (IOException e) {}
+        finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 
 
     //Sprawdzanie stanu pralki
     private boolean stanPralki() {
         boolean sprawnosc = true;
-        if (cisnienieWody.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (temperaturaWody.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (zabezpieczenieDrzwi.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (przeplywomierz.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (silnik.sprawdzZuzycie()!=true) sprawnosc = false;
-        if (ukladWodny.sprawdzZuzycie()!=true) sprawnosc = false;
+        for (Czujnik cz : czujniki) {
+            if (cz.sprawdzZuzycie()!=true) {
+                sprawnosc = false;
+                break;
+            }
+        }
         return sprawnosc;
     }
 
