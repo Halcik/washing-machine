@@ -40,13 +40,13 @@ public class Panel implements Runnable{
 
     public void obslugaDrzwiczek(Czujnik zabezpieczenieDrzwi) {
         switch ((int)zabezpieczenieDrzwi.stan) {
-            case 0:
-                System.out.println("Drzwi są zamykane..");
-                zabezpieczenieDrzwi.stan = 1;
-                break;
             case 1:
-                System.out.println("Drzwi są otwierane");
+                System.out.println("Drzwi są zamykane..");
                 zabezpieczenieDrzwi.stan = 0;
+                break;
+            case 0:
+                System.out.println("Drzwi są otwierane");
+                zabezpieczenieDrzwi.stan = 1;
                 break;
             case 2:
                 System.out.println("Drzwi są zablokowane. Nie można ich otworzyć");

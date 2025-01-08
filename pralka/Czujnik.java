@@ -42,8 +42,7 @@ public class Czujnik implements Runnable {
 
     //dane do raportu o czujnikach
     public String raportuj() {
-        String raport = "";
-        raport = "["+nazwa.toUpperCase()+"] Zużycie: " + zuzycie + "%, zdatność do użytku: "+sprawdzZuzycie();
+        String raport = "["+nazwa.toUpperCase()+"] Zużycie: " + zuzycie + "%, zdatność do użytku: "+sprawdzZuzycie();
         return raport;
     }
 
