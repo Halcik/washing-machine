@@ -4,12 +4,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Pralka {
     Scanner sc = new Scanner(System.in);
+    List<String> info = new ArrayList<>();
 
     //Pojemniki
     Pojemnik plynPlukanie = new Pojemnik(10, 50, "płyn do płukania");
@@ -38,7 +40,10 @@ public class Pralka {
     Program wbudowany4 = new Program("Wełna", "krótki czas prania i niskie obroty.", 30.0, true, 5, 40, 600, false);
     Program wbudowany5 = new Program("Pranie szybkie", "rótkie, szybkie odświeżenie ubrań w niższej temperaturze.", 20.0, false, 0, 15, 1000, false);
 
+    Program program; //program wybrany do procesu prania
+
     List<Czujnik> czujniki = Arrays.asList(cisnienieWody, temperaturaWody, poziomWody, zabezpieczenieDrzwi, przeplywomierz, silnik, ukladWodny.grzalka, ukladWodny.pompa, ukladWodny.filtr, ukladWodny.zaworWe, ukladWodny.zaworWy);
+
 
     //obsłużenie wybranej akcji przez usera w panelu
     public void akcja() {
@@ -86,6 +91,12 @@ public class Pralka {
             for (Czujnik cz : czujniki) {
                 writer.write(cz.raportuj() + "\n");
             }
+            if (!info.isEmpty()) {
+                writer.write("!!! Zdarzenia dodatkowe !!!\n");
+                for (String line : info) {
+                    writer.write(line + "\n");
+                }
+            }
         } catch (IOException e) {
         } finally {
             if (writer != null) {
@@ -97,12 +108,11 @@ public class Pralka {
         }
     }
 
-
-    //Sprawdzanie stanu pralki
+    //Sprawdzanie stanu pralki - technicznego, więc stan czujników
     private boolean stanPralki() {
         boolean sprawnosc = true;
         for (Czujnik cz : czujniki) {
-            if (cz.sprawdzZuzycie() != true) {
+            if (!cz.sprawdzZuzycie()) {
                 sprawnosc = false;
                 break;
             }
@@ -110,34 +120,42 @@ public class Pralka {
         return sprawnosc;
     }
 
-    //proces prania
-    private void pranie(Program program) {
-        try {
-            if (zabezpieczenieDrzwi.pomiar() == 1) throw new IllegalStateException("Drzwi pralki nie są zamknięte!");
-            zabezpieczenieDrzwi.stan = 2;
-            if (beben.sprawdz() == false) throw new IllegalStateException("Niezgodna waga bębna");
+    //sprawdzenie warunków prania - czy są potrzebne rzeczy
+    private boolean sprawdzWarunkiPrania() throws  IllegalStateException {
+        if (zabezpieczenieDrzwi.pomiar() == 1) throw new IllegalStateException("[ERR] Drzwi pralki nie są zamknięte!");
+        zabezpieczenieDrzwi.stan = 2;
+        if (!beben.sprawdz()) throw new IllegalStateException("[ERR} Niezgodna waga bębna");
+        if (!plynPlukanie.sprawdz() && program.dodatkowePlukanie) throw new IllegalStateException("[ERR] Niedozwolona ilość płynu do płukania");
+        if (!proszekDoPrania.sprawdz()) throw new IllegalStateException("[ERR] Niedozwolona ilość proszku do prania");
+        return true;
+    }
 
-            beben.wywazenie(silnik);
-            ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
-            proszekDoPrania.uzyj(); //PRZED MUSI BYĆ
-            panel.ustawCzas(program.czasPraniaWstepnego + program.czasPraniaZasadniczego);
-            Thread wyswietlaczCzasu = new Thread(new Panel());
-            wyswietlaczCzasu.start();
-            if (program.czasPraniaWstepnego > 0) pranieWstepne(program);
-            pranieZasadnicze(program);
-            try {
+    //proces prania
+    private void pranie() {
+        try {
+            if (sprawdzWarunkiPrania()) {
+                beben.wywazenie(silnik);
+                ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
+                proszekDoPrania.uzyj();
+                panel.ustawCzas(program.czasPraniaWstepnego + program.czasPraniaZasadniczego);
+                Thread wyswietlaczCzasu = new Thread(panel);
+                wyswietlaczCzasu.start();
+                if (program.czasPraniaWstepnego > 0) pranieWstepne(program);
+                pranieZasadnicze(program);
                 wyswietlaczCzasu.join();
-            } catch (InterruptedException e) {
+                if (program.dodatkowePlukanie)
+                    ukladWodny.plukanie(beben, silnik, poziomWody, przeplywomierz, temperaturaWody, plynPlukanie);
+                for (int i = 0; i < 4; i++) {
+                    beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
+                }
+                ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
             }
-            if (program.dodatkowePlukanie) //A SPRAWDZENIE, CZY MAMY PŁYN W OGÓLE?
-                ukladWodny.plukanie(beben, silnik, poziomWody, przeplywomierz, temperaturaWody, plynPlukanie);
-            for (int i = 0; i < 4; i++) {
-                beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
-            }
-            ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
-            zabezpieczenieDrzwi.stan = 0;
         } catch (IllegalStateException e) {
             System.out.println(e.getMessage());
+            info.add(e.getMessage());
+        } catch (InterruptedException e) {
+        } finally {
+            zabezpieczenieDrzwi.stan = 0;
         }
     }
 
