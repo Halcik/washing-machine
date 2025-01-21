@@ -1,5 +1,6 @@
 package pralka;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -76,8 +77,10 @@ public class Pralka {
     public void sprzatanie() {
         sc.close();
         raportPralki();
+        File czujnik = new File(Czujnik.plikCzujnik);
+        czujnik.delete(); //czyszczenie pliku przed zapisem nowym
         for (Czujnik cz : czujniki) {
-            cz.czujnikThread.interrupt();
+            cz.zapisz();
         }
     }
 

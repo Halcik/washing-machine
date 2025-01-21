@@ -1,8 +1,11 @@
 package pralka;
 
+import java.io.*;
 import java.util.Random;
 
 public class Czujnik implements Runnable {
+    static String plikCzujnik = "czujnikiStan.csv";
+
     String nazwa;
     double stan = 0; //stan w sensie temperatury, poziomu wody, itd
     int zuzycie = 0; //zużycie czujnika
@@ -10,6 +13,32 @@ public class Czujnik implements Runnable {
     Thread czujnikThread;
 
     public Czujnik(String nazwa) {
+        BufferedReader br = null;
+        String line = "";
+        String[] wpis;
+        File file = new File(plikCzujnik);
+        try {
+            if (file.exists() && file.length() > 0) {
+                br = new BufferedReader(new FileReader(file));
+
+                while((line=br.readLine())!=null) {
+                    wpis = line.split(",");
+                    if (wpis[0].equals(nazwa)) {
+                        stan = Double.parseDouble(wpis[1]);
+                        zuzycie = Integer.parseInt(wpis[2]);
+                        tempo = Double.parseDouble(wpis[3]);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {}
+        catch (IOException e) {}
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {}
+            }
+        }
         this.nazwa = nazwa;
         czujnikThread = new Thread(this);
         czujnikThread.start();
@@ -46,11 +75,28 @@ public class Czujnik implements Runnable {
         return raport;
     }
 
+    public void zapisz() {
+        this.czujnikThread.interrupt();
+        String doZapisu = String.join(",", nazwa, String.valueOf(stan), String.valueOf(zuzycie), String.valueOf(tempo));
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(plikCzujnik, true));
+            bw.write(doZapisu+"\n");
+        } catch (IOException e) {}
+        finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {}
+            }
+        }
+    }
+
     //zmiana stanu podczas działania pralki
     private synchronized void zmianaStanu() {
         Random losuj = new Random();
-        double nowyStan = losuj.nextDouble(21*tempo)+(stan-10*tempo);
-        stan = nowyStan;
+        double nowyStan = (Math.round(Math.abs(losuj.nextDouble(21*tempo)+(stan-10*tempo))*100));
+        stan = nowyStan/100;
     }
 
     public void run() {
