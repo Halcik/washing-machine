@@ -8,11 +8,15 @@ public class Czujnik implements Runnable {
 
     String nazwa;
     double stan = 0; //stan w sensie temperatury, poziomu wody, itd
-    int zuzycie = 0; //zużycie czujnika
-    double tempo = 0.1;
+    double zuzycie = 0; //zużycie czujnika
+    double tempo = 1;
+    boolean czyWatek = true;
     Thread czujnikThread;
 
-    public Czujnik(String nazwa) {
+    public Czujnik(String nazwa, boolean... czyWatek) {
+        if (czyWatek.length>0) {
+            this.czyWatek = czyWatek[0];
+        }
         BufferedReader br = null;
         String line = "";
         String[] wpis;
@@ -25,7 +29,7 @@ public class Czujnik implements Runnable {
                     wpis = line.split(",");
                     if (wpis[0].equals(nazwa)) {
                         stan = Double.parseDouble(wpis[1]);
-                        zuzycie = Integer.parseInt(wpis[2]);
+                        zuzycie = Double.parseDouble(wpis[2]);
                         tempo = Double.parseDouble(wpis[3]);
                     }
                 }
@@ -40,8 +44,10 @@ public class Czujnik implements Runnable {
             }
         }
         this.nazwa = nazwa;
-        czujnikThread = new Thread(this);
-        czujnikThread.start();
+        if (this.czyWatek) {
+            czujnikThread = new Thread(this);
+            czujnikThread.start();
+        }
     }
 
     //pomiar stanu czujnika
@@ -57,13 +63,13 @@ public class Czujnik implements Runnable {
 
     //ustawienie do odpowiedniego poziomu stanu czujnika, np. temperatury
     public synchronized void ustawStan(double poziom) {
+        System.out.println("Ustawianie "+nazwa+" do stanu "+poziom);
         while (Math.abs(poziom-stan)>(tempo/10)) {
             double roznica = poziom-stan;
-            double zmiana = roznica*tempo;
+            double zmiana = Math.round((roznica/tempo)*100.0)/100.0;
             stan += zmiana;
-            System.out.println("Stan: " + stan);
             try {
-            Thread.sleep(100);
+            Thread.sleep(50);
             } catch (InterruptedException e) {}
         }
         zuzycie++;
@@ -76,7 +82,9 @@ public class Czujnik implements Runnable {
     }
 
     public void zapisz() {
-        this.czujnikThread.interrupt();
+        if (czujnikThread !=null) {
+            czujnikThread.interrupt();
+        }
         String doZapisu = String.join(",", nazwa, String.valueOf(stan), String.valueOf(zuzycie), String.valueOf(tempo));
         BufferedWriter bw = null;
         try {
@@ -92,10 +100,10 @@ public class Czujnik implements Runnable {
         }
     }
 
-    //zmiana stanu podczas działania pralki
+    //zmiana stanu podczas działania pralki przez wątki
     private synchronized void zmianaStanu() {
         Random losuj = new Random();
-        double nowyStan = (Math.round(Math.abs(losuj.nextDouble(21*tempo)+(stan-10*tempo))*100));
+        double nowyStan =   (Math.abs(losuj.nextDouble(21*tempo)+(stan-10*tempo))*100);
         stan = nowyStan/100;
     }
 

@@ -3,6 +3,7 @@ package pralka;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,8 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class Pralka {
+public class Pralka implements Runnable {
     Scanner sc = new Scanner(System.in);
+    boolean sprawdzanie = true;
     List<String> info = new ArrayList<>();
 
     //Pojemniki
@@ -25,7 +27,7 @@ public class Pralka {
     Czujnik cisnienieWody = new Czujnik("Ciśnienie");
     Czujnik temperaturaWody = new Czujnik("Temperatura");
     Czujnik poziomWody = new Czujnik("Woda");
-    Czujnik zabezpieczenieDrzwi = new Czujnik("Drzwiczki"); //0-zamknięte, 1-otwarte, 2-zablokowane
+    Czujnik zabezpieczenieDrzwi = new Czujnik("Drzwiczki", false); //0-zamknięte, 1-otwarte, 2-zablokowane
     Czujnik przeplywomierz = new Czujnik("Przepływomierz");
 
     Silnik silnik = new Silnik();
@@ -48,7 +50,7 @@ public class Pralka {
 
     //obsłużenie wybranej akcji przez usera w panelu
     public void akcja() {
-        Program program = null;
+        program = null;
         int choice = 0;
         while (choice != 6) {
             choice = panel.widokPanelu(sc);
@@ -56,18 +58,29 @@ public class Pralka {
                 case 1:
                     program = panel.buttonProgram(sc);
                     break;
-                case 2: //do zmiany
-                    panel.buttonWlacznik();
+                case 2:
+                    if (program != null) {
+                        panel.buttonWlacznik();
+                        pranie();
+                    } else System.out.println("Wybierz najpierw program");
                     break;
-                case 3: //do zmiany
+                case 3:
                     plynPlukanie.napelnij(sc);
                     proszekDoPrania.napelnij(sc);
                     break;
                 case 4:
                     panel.obslugaDrzwiczek(zabezpieczenieDrzwi);
                     break;
-                case 5: //do zmiany
-                    beben.napelnij(sc);
+                case 5:
+                    if (zabezpieczenieDrzwi.stan==1) {
+                        beben.napelnij(sc);
+                    } else System.out.println("Otwórz najpierw dźwiczki");
+                    break;
+                case 6:
+                    System.out.println("Zakończenie działania symulatora...");
+                    break;
+                default:
+                    System.out.println("Nieznana operacja..");
                     break;
             }
         }
@@ -89,8 +102,8 @@ public class Pralka {
         LocalDateTime data = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         try {
-            writer = new FileWriter("raport.txt");
-            writer.write("~~~Raport z " + data.format(formatter) + "~~~\n");
+            writer = new FileWriter("raport.txt", true);
+            writer.write("\n~~~Raport z " + data.format(formatter) + "~~~\n");
             for (Czujnik cz : czujniki) {
                 writer.write(cz.raportuj() + "\n");
             }
@@ -127,6 +140,7 @@ public class Pralka {
     private boolean sprawdzWarunkiPrania() throws  IllegalStateException {
         if (zabezpieczenieDrzwi.pomiar() == 1) throw new IllegalStateException("[ERR] Drzwi pralki nie są zamknięte!");
         zabezpieczenieDrzwi.stan = 2;
+        System.out.println("Blokowanie drzwiczek..");
         if (!beben.sprawdz()) throw new IllegalStateException("[ERR} Niezgodna waga bębna");
         if (!plynPlukanie.sprawdz() && program.dodatkowePlukanie) throw new IllegalStateException("[ERR] Niedozwolona ilość płynu do płukania");
         if (!proszekDoPrania.sprawdz()) throw new IllegalStateException("[ERR] Niedozwolona ilość proszku do prania");
@@ -141,14 +155,19 @@ public class Pralka {
                 ukladWodny.przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), program.temperaturaWody);
                 proszekDoPrania.uzyj();
                 panel.ustawCzas(program.czasPraniaWstepnego + program.czasPraniaZasadniczego);
+                System.out.println(panel.czas);
+                Thread sprawdz = new Thread(this);
                 Thread wyswietlaczCzasu = new Thread(panel);
                 wyswietlaczCzasu.start();
+                sprawdz.start();
                 if (program.czasPraniaWstepnego > 0) pranieWstepne(program);
                 pranieZasadnicze(program);
                 wyswietlaczCzasu.join();
+                sprawdz.interrupt();
+                sprawdzanie = false;
                 if (program.dodatkowePlukanie)
                     ukladWodny.plukanie(beben, silnik, poziomWody, przeplywomierz, temperaturaWody, plynPlukanie);
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 2; i++) {
                     beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
                 }
                 ukladWodny.odprowadzWode(poziomWody, przeplywomierz);
@@ -159,42 +178,60 @@ public class Pralka {
         } catch (InterruptedException e) {
         } finally {
             zabezpieczenieDrzwi.stan = 0;
+            System.out.println("Odblokowano drzwiczki");
         }
+        System.out.println("Pranie zostało zakończone");
     }
 
     //Wykonanie prania wstępnego
     private void pranieWstepne(Program program) {
+        System.out.println("~~~~~~~~~~");
+        System.out.println("Rozpoczęcie prania wstępnego");
         int czas = 0;
         double temperatura = program.temperaturaWody / 5 * 3;
         int predkosc = program.predkoscObrotowaWirowania / 2;
-        while (czas < program.czasPraniaWstepnego) {
-            sprawdzParametry(temperatura, predkosc);
+        while (czas < program.czasPraniaWstepnego/4) {
             beben.wirowanie(silnik, predkosc);
             czas++;
         }
+        System.out.println("Zakończenie prania wstępnego");
+        System.out.println("~~~~~~~~~~");
+
     }
 
     //Wykonanie prania zasadniczego
     private void pranieZasadnicze(Program program) {
+        System.out.println("~~~~~~~~~~");
+        System.out.println("Rozpoczęcie prania zasadniczego");
         int czas = 0;
-        while (czas < program.czasPraniaWstepnego) {
-            sprawdzParametry(program.temperaturaWody, program.predkoscObrotowaWirowania);
+        while (czas < program.czasPraniaZasadniczego/5) {
             beben.wirowanie(silnik, program.predkoscObrotowaWirowania);
             czas++;
         }
+        System.out.println("Zakończenie prania zasadniczego");
+        System.out.println("~~~~~~~~~~");
+    }
 
+    public void run() {
+        while (sprawdzanie) {
+            sprawdzParametry(program.temperaturaWody, program.predkoscObrotowaWirowania);
+        }
     }
 
     //Sprawdzenie utrzymania odpowiednich parametrów prania
     private void sprawdzParametry(double temperatura, int predkosc) {
+        System.out.println("Sprawdzanie parametrów");
         double woda = beben.ileWody();
         if (woda != poziomWody.pomiar()) poziomWody.ustawStan(woda);
         if (temperaturaWody.pomiar() != temperatura) temperaturaWody.ustawStan(temperatura);
         if (silnik.pomiar() != predkosc) silnik.ustawPredkosc(predkosc);
         try {
-            Thread.sleep(600); //czas zajmuje też ustawianie ewentualne i wirowanie
+            Thread.sleep(100); //czas zajmuje też ustawianie ewentualne i wirowanie
         } catch (InterruptedException e) {
         }
+        poziomWody.zuzycie -=1;
+        temperaturaWody.zuzycie -=1;
+        silnik.zuzycie -=1;
     }
 
 }

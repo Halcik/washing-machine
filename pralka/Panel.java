@@ -15,6 +15,7 @@ public class Panel implements Runnable{
         System.out.println("[3] Szufladka na detergenty");
         System.out.println("[4] Drzwiczki");
         System.out.println("[5] Dodanie ciuchów");
+        System.out.println("[6] Wyłączenie symulatora");
         System.out.println("Co chcesz zrobić?");
         int choice = sc.nextInt();
         System.out.println();
@@ -45,26 +46,29 @@ public class Panel implements Runnable{
                 zabezpieczenieDrzwi.stan = 0;
                 break;
             case 0:
-                System.out.println("Drzwi są otwierane");
+                System.out.println("Drzwi są otwierane..");
                 zabezpieczenieDrzwi.stan = 1;
                 break;
             case 2:
                 System.out.println("Drzwi są zablokowane. Nie można ich otworzyć");
                 break;
+            default:
+                System.out.println("Drzwi są otwierane..");
+                zabezpieczenieDrzwi.stan = 1;
         }
     }
 
     public void run() {
-        screenTime();
+        this.screenTime();
     }
 
     //ekranik do wyświetlania czasu
     private void screenTime() {
-        while (czas>0) {
+        while (czas>=0) {
             System.out.println("Pozostały czas: "+czas);
             czas--;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {}
         }
     }

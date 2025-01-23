@@ -35,6 +35,7 @@ public class UkladWodny {
             System.out.println("Trwa płukanie...");
             beben.wirowanie(silnik, 500);
             filtr.filtruj();
+            System.out.println("Płukanie zakończone.");
         }
     }
 
@@ -52,6 +53,7 @@ public class UkladWodny {
                 przeplywomierz.ustawStan(0);
             }
             zuzycie++;
+            System.out.println("Woda gotowa");
         }
     }
 
@@ -63,6 +65,7 @@ public class UkladWodny {
             System.out.println("Podgrzewanie wody...");
             temperaturaWody.ustawStan(temperatura);
             zuzycie++;
+            System.out.println("Woda podgrzana.");
         }
     }
 
@@ -73,6 +76,7 @@ public class UkladWodny {
         public void filtruj() {
             System.out.println("Filtrowanie wody...");
             zuzycie++;
+            System.out.println("Zakończono filtrowanie.");
         }
     }
 

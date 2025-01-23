@@ -8,19 +8,19 @@ public class Silnik extends Czujnik {
     //ustawStan
     public Silnik() {
         super("Silnik");
+        tempo = 10;
     }
 
     //wszelkie zmiany prędkości, funkcje sterownika
     public void ustawPredkosc(double predkosc) {
-        tempo = 100;
         ustawStan(predkosc);
         System.out.println("Obracanie bębna z prędkością: " + predkosc+" RPM");
+        zuzycie-=0.5;
     }
 
     public void zatrzymaj() {
-        tempo = 100;
         ustawStan(0);
-        System.out.print("Bęben zatrzymany");
+        System.out.println("Bęben zatrzymany");
     }
 
 

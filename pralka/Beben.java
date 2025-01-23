@@ -11,6 +11,7 @@ public class Beben extends Pojemnik {
         if (zapelnienie>0) {
             System.out.println("Bęben powoli się obraca...");
             wirowanie(silnik, 500);
+            System.out.println("Bęben wyważony - ciuchy rozłożone równomiernie");
         }
         return zapelnienie;
     }
@@ -25,9 +26,9 @@ public class Beben extends Pojemnik {
         System.out.println("Rozpoczynam wirowanie");
         try {
             silnik.ustawPredkosc(predkosc);
-            Thread.sleep(200);
+            Thread.sleep(50);
             silnik.zatrzymaj();
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {}
 
     }
