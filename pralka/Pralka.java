@@ -195,8 +195,6 @@ public class Pralka implements Runnable {
             czas++;
         }
         System.out.println("Zakończenie prania wstępnego");
-        System.out.println("~~~~~~~~~~");
-
     }
 
     //Wykonanie prania zasadniczego
@@ -215,6 +213,9 @@ public class Pralka implements Runnable {
     public void run() {
         while (sprawdzanie) {
             sprawdzParametry(program.temperaturaWody, program.predkoscObrotowaWirowania);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {}
         }
     }
 

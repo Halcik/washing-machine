@@ -63,7 +63,7 @@ public class Czujnik implements Runnable {
 
     //ustawienie do odpowiedniego poziomu stanu czujnika, np. temperatury
     public synchronized void ustawStan(double poziom) {
-        System.out.println("Ustawianie "+nazwa+" do stanu "+poziom);
+        System.out.println("---->Ustawianie "+nazwa+" do stanu "+poziom);
         while (Math.abs(poziom-stan)>(tempo/10)) {
             double roznica = poziom-stan;
             double zmiana = Math.round((roznica/tempo)*100.0)/100.0;

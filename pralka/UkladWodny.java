@@ -13,6 +13,9 @@ public class UkladWodny {
         zaworWe.otworz();
         filtr.filtruj();
         pompa.pompowanie(poziomWody, przeplywomierz, ileWody);
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {}
         grzalka.podgrzej(temperatura, temperaturaWody);
         zaworWe.zamknij();
         System.out.println("Woda przygotowana");
@@ -22,6 +25,9 @@ public class UkladWodny {
         System.out.println("Rozpoczęcie odprowadzania wody...");
         zaworWy.otworz();
         pompa.pompowanie(poziomWody, przeplywomierz, 0);
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {}
         zaworWy.zamknij();
         System.out.println("Woda odprowadzona.");
     }
@@ -31,12 +37,11 @@ public class UkladWodny {
         odprowadzWode(poziomWody, przeplywomierz);
         przygotujWode(poziomWody, przeplywomierz, temperaturaWody, beben.ileWody(), 15);
         plynPlukanie.uzyj();
-        for (int i=0; i<4; i++) {
-            System.out.println("Trwa płukanie...");
-            beben.wirowanie(silnik, 500);
-            filtr.filtruj();
-            System.out.println("Płukanie zakończone.");
-        }
+        System.out.println("Trwa płukanie...");
+        beben.wirowanie(silnik, 500);
+        filtr.filtruj();
+        System.out.println("Płukanie zakończone.");
+
     }
 
 
